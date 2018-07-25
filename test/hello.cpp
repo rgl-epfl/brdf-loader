@@ -1,31 +1,36 @@
+#define POWITACQ_IMPLEMENTATION
+#include "powitacq.h"
 
-#define POWITACQ_BRDF_IMPLEMENTATION
-#include "brdf.h"
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
+    using namespace powitacq;
+
     // load a BRDF
-    powitacq::brdf brdf("/home/jdups/Dropbox/powitacq_datasets/materials/acrylic_felt_orange_spec.bsdf");
+    BRDF brdf("acrylic_felt_orange_spec.bsdf");
 
     // evaluate the BRDF
     {
-        powitacq::vec3 wi = powitacq::normalize(powitacq::vec3(0, 0, 1));
-        powitacq::vec3 wo = powitacq::normalize(powitacq::vec3(1, 1, 1));
-        powitacq::brdf::value_type fr = brdf.eval(wi, wo);
+        Vector3f wi = normalize(Vector3f(0, 0, 1));
+        Vector3f wo = normalize(Vector3f(1, 1, 1));
+        Spectrum lambda = brdf.wavelengths();
+        Spectrum fr = brdf.eval(wi, wo);
         /* print values to console */
-        for (int i = 0; i < fr.size(); ++i) {
-            printf("%f\n", fr[i]);
-        }
+        for (size_t i = 0; i < fr.size(); ++i)
+            printf("%f: %f\n", lambda[i], fr[i]);
     }
 
     // sample the BRDF
     {
-        powitacq::vec2 u = powitacq::vec2(0.99334f, 0.231f);
-        powitacq::vec3 wi = powitacq::normalize(powitacq::vec3(1, 1, 1));
-        powitacq::brdf::value_type fr = brdf.sample(u, wi);
+        Vector2f u = Vector2f(0.99334f, 0.231f);
+        Vector3f wi = normalize(Vector3f(1, 1, 1));
+        Vector3f wo;
+        float pdf;
+
+        Spectrum lambda = brdf.wavelengths();
+        Spectrum weight = brdf.sample(u, wi, &wo, &pdf);
+
         /* print values to console */
-        for (int i = 0; i < fr.size(); ++i) {
-            printf("%f\n", fr[i]);
-        }
+        for (size_t i = 0; i < weight.size(); ++i)
+            printf("%f: %f\n", lambda[i], weight[i]);
     }
 }
