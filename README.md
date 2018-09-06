@@ -34,3 +34,7 @@ inefficiencies that should be removed in a
 2. The implementation doesn't rely on vectorization
    to accelerate simultaneous evaluation at multiple
    wavelengths.
+   
+In addition, we also provide a loader for our BRDF conversions 
+from spectral to RGB (see powitacq_rgb.h). The interface and use 
+is the same as that provided in powitacq.h. 
