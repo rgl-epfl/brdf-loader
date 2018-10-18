@@ -39,6 +39,18 @@
 #include <memory>
 #include <array>
 #include <valarray>
+#include <unordered_map>
+
+/* Helper functions if C++11 is used instead of C++14 */
+#if __cplusplus < 201402L
+namespace std {
+template< bool B, class T = void >
+using enable_if_t = typename enable_if<B,T>::type;
+
+template< class T >
+using make_signed_t = typename make_signed<T>::type;
+}
+#endif
 
 #define POWITACQ_NAMESPACE_BEGIN  namespace powitacq {
 #define POWITACQ_NAMESPACE_END    }
