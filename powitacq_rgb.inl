@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <cstdint>        // uint32_t, etc.
 #include <cstring>        // memcpy
@@ -1073,7 +1074,9 @@ Vector3f BRDF::eval(const Vector3f &wi, const Vector3f &wo) const {
     for (int i = 0; i < 3; ++i) {
         float params_fr[3] = { phi_i, theta_i, float(i) };
 
-        fr[i] = m_data->rgb.eval(sample, params_fr);
+        /* clamp the value to zero (negative values occur when the original
+           spectral data goes out of gamut) */
+        fr[i] = std::max(0.f, m_data->rgb.eval(sample, params_fr));
     }
 
     fr = fr * m_data->ndf.eval(u_wm, params) /
@@ -1145,7 +1148,9 @@ Vector3f BRDF::sample(const Vector2f &u, const Vector3f &wi,
     for (int i = 0; i < 3; ++i) {
         float params_fr[3] = { phi_i, theta_i, float(i) };
 
-        fr[i] = m_data->rgb.eval(sample, params_fr);
+        /* clamp the value to zero (negative values occur when the original
+           spectral data goes out of gamut) */
+        fr[i] = std::max(0.f, m_data->rgb.eval(sample, params_fr));
     }
 
     fr = fr * m_data->ndf.eval(u_wm, params) /
