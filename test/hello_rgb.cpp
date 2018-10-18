@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
     using namespace powitacq;
 
     // load a BRDF
-    BRDF brdf("acrylic_felt_orange_rgb.bsdf");
+    BRDF brdf("cc_ibiza_sunset_rgb.bsdf");
 
     // evaluate the BRDF
     {
