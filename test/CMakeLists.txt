@@ -10,4 +10,4 @@ project (acq)
 
 # ------------------------------------------------------------------------------
 add_executable(hello hello.cpp)
-add_executable(rgb hello_rgb.cpp)
+add_executable(hello_rgb hello_rgb.cpp)

@@ -1020,6 +1020,11 @@ BRDF::~BRDF() { }
 // PDF interface
 // *****************************************************************************
 
+/// Numerically more robust way of evaluating 'std::acos(d.z())'
+inline float elevation(const Vector3f &d) {
+    return 2.f * asin(.5f * std::sqrt(sqr(d.x()) + sqr(d.y()) + sqr(d.z() - 1.f)));
+}
+
 float BRDF::pdf(const Vector3f &wi, const Vector3f &wo) const {
     if (wi.z() <= 0 || wo.z() <= 0)
         return 0;
@@ -1027,9 +1032,9 @@ float BRDF::pdf(const Vector3f &wi, const Vector3f &wo) const {
     Vector3f wm = normalize(wi + wo);
 
     /* Cartesian -> spherical coordinates */
-    float theta_i = std::acos(wi.z()),
+    float theta_i = elevation(wi),
           phi_i   = std::atan2(wi.y(), wi.x()),
-          theta_m = std::acos(wm.z()),
+          theta_m = elevation(wm),
           phi_m   = std::atan2(wm.y(), wm.x());
 
     /* Spherical coordinates -> unit coordinate system */
@@ -1048,7 +1053,7 @@ float BRDF::pdf(const Vector3f &wi, const Vector3f &wo) const {
         pdf = m_data->luminance.eval(sample, params);
     #endif
 
-    float sin_theta_m = std::sqrt(1 - sqr(wm.z()));
+    float sin_theta_m = std::sqrt(sqr(wm.x()) + sqr(wm.y()));
     float jacobian = std::max(2.f * sqr(Pi) * u_wm.x() *
                               sin_theta_m, 1e-6f) * 4.f * dot(wi, wm);
 
@@ -1066,9 +1071,9 @@ Spectrum BRDF::eval(const Vector3f &wi, const Vector3f &wo) const {
     Vector3f wm = normalize(wi + wo);
 
     /* Cartesian -> spherical coordinates */
-    float theta_i = std::acos(wi.z()),
+    float theta_i = elevation(wi),
           phi_i   = std::atan2(wi.y(), wi.x()),
-          theta_m = std::acos(wm.z()),
+          theta_m = elevation(wm),
           phi_m   = std::atan2(wm.y(), wm.x());
 
     /* Spherical coordinates -> unit coordinate system */
@@ -1110,7 +1115,7 @@ Spectrum BRDF::sample(const Vector2f &u, const Vector3f &wi,
         return zero();
     }
 
-    float theta_i = std::acos(wi.z()),
+    float theta_i = elevation(wi),
           phi_i   = std::atan2(wi.y(), wi.x());
 
     float params[2] = { phi_i, theta_i };
