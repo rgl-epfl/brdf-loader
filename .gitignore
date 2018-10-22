@@ -1,0 +1,6 @@
+*.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
+test/hello
+test/hello_rgb
