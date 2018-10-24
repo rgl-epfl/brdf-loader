@@ -1081,9 +1081,13 @@ Vector3f BRDF::eval(const Vector3f &wi, const Vector3f &wo) const {
     for (int i = 0; i < 3; ++i) {
         float params_fr[3] = { phi_i, theta_i, float(i) };
 
-        /* clamp the value to zero (negative values occur when the original
-           spectral data goes out of gamut) */
-        fr[i] = std::max(0.f, m_data->rgb.eval(sample, params_fr));
+        fr[i] = m_data->rgb.eval(sample, params_fr);
+
+        #if POWITACQ_CLIP_RGB
+            /* clamp the value to zero (negative values occur when the original
+               spectral data goes out of gamut) */
+            fr[i] = std::max(0.f, fr[i]);
+        #endif
     }
 
     fr = fr * m_data->ndf.eval(u_wm, params) /
@@ -1155,9 +1159,13 @@ Vector3f BRDF::sample(const Vector2f &u, const Vector3f &wi,
     for (int i = 0; i < 3; ++i) {
         float params_fr[3] = { phi_i, theta_i, float(i) };
 
-        /* clamp the value to zero (negative values occur when the original
-           spectral data goes out of gamut) */
-        fr[i] = std::max(0.f, m_data->rgb.eval(sample, params_fr));
+        fr[i] = m_data->rgb.eval(sample, params_fr);
+
+        #if POWITACQ_CLIP_RGB
+            /* clamp the value to zero (negative values occur when the original
+               spectral data goes out of gamut) */
+            fr[i] = std::max(0.f, fr[i]);
+        #endif
     }
 
     fr = fr * m_data->ndf.eval(u_wm, params) /

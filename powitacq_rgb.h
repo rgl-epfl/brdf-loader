@@ -128,6 +128,21 @@ private:
 
 POWITACQ_NAMESPACE_END
 
+/**
+ * The RGB version of the eval() and sample() methods return sRGB color values
+ * by default. Negative (out of gamut) values are simply clipped to zero. To
+ * use a different RGB gamut, define
+ *
+ *    #define POWITACQ_CLIP_RGB 0
+ *
+ * before including this file, in which case the clipping operation is
+ * disabled. You should then be able to transform the RGB values into your
+ * color space of choice.
+ */
+#if !defined(POWITACQ_CLIP_RGB)
+#  define POWITACQ_CLIP_RGB 1
+#endif
+
 #ifdef POWITACQ_IMPLEMENTATION
 #  include "powitacq_rgb.inl"
 #endif
