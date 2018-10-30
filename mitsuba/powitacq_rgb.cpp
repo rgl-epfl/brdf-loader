@@ -123,7 +123,7 @@ public:
         oss << "vec3 " << evalName << "(vec2 uv, vec3 wi, vec3 wo) {" << endl
             << "    if (cosTheta(wi) < 0.0 || cosTheta(wo) < 0.0)" << endl
             << "        return vec3(0.0);" << endl
-            << "    return inv_pi * cosTheta(wo);" << endl
+            << "    return vec3(inv_pi * cosTheta(wo));" << endl
             << "}" << endl
             << endl
             << "vec3 " << evalName << "_diffuse(vec2 uv, vec3 wi, vec3 wo) {" << endl
