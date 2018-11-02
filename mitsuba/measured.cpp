@@ -1,19 +1,6 @@
 /*
-    This file is part of Mitsuba, a physically based rendering system.
-
-    Copyright (c) 2007-2014 by Wenzel Jakob and others.
-
-    Mitsuba is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License Version 3
-    as published by the Free Software Foundation.
-
-    Mitsuba is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
+    This file provides a Mitsuba implementation of the BRDF model. It
+    is mostly just a thin wrapper around "powitacq_rgb.h".
 */
 
 #include <mitsuba/core/fresolver.h>
@@ -27,24 +14,22 @@
 
 MTS_NAMESPACE_BEGIN
 
-class Powitacq : public BSDF {
+class Measured : public BSDF {
 public:
-    Powitacq(const Properties &props):
+    Measured(const Properties &props):
         BSDF(props) {
-        fs::path filename =
-                Thread::getThread()->getFileResolver()->resolve(props.getString("filename"));
+        fs::path filename = Thread::getThread()->getFileResolver()->resolve(
+            props.getString("filename"));
 
-        // load file
         m_brdf = new powitacq::BRDF(filename.string().c_str());
     }
 
-    Powitacq(Stream *stream, InstanceManager *manager)
+    Measured(Stream *stream, InstanceManager *manager)
      : BSDF(stream, manager) {
         configure();
     }
 
-    ~Powitacq()
-    {
+    ~Measured() {
         delete m_brdf;
     }
 
@@ -93,10 +78,7 @@ public:
     }
 
     std::string toString() const {
-        std::ostringstream oss;
-        oss << "Powitacq[" << endl
-            << "]";
-        return oss.str();
+        return "Measured[];"
     }
 
     Shader *createShader(Renderer *renderer) const;
@@ -107,9 +89,9 @@ private:
 };
 
 // ================ Hardware shader implementation ================
-class PowitacqShader : public Shader {
+class MeasuredShader : public Shader {
 public:
-    PowitacqShader(Renderer *renderer)
+    MeasuredShader(Renderer *renderer)
         : Shader(renderer, EBSDFShader) {
     }
 
@@ -136,11 +118,11 @@ private:
     ref<Shader> m_reflectanceShader;
 };
 
-Shader *Powitacq::createShader(Renderer *renderer) const {
-    return new PowitacqShader(renderer);
+Shader *Measured::createShader(Renderer *renderer) const {
+    return new MeasuredShader(renderer);
 }
 
-MTS_IMPLEMENT_CLASS(PowitacqShader, false, Shader)
-MTS_IMPLEMENT_CLASS_S(Powitacq, false, BSDF)
-MTS_EXPORT_PLUGIN(Powitacq, "Acquired BRDF");
+MTS_IMPLEMENT_CLASS(MeasuredShader, false, Shader)
+MTS_IMPLEMENT_CLASS_S(Measured, false, BSDF)
+MTS_EXPORT_PLUGIN(Measured, "Measured BRDF");
 MTS_NAMESPACE_END
