@@ -78,7 +78,7 @@ public:
     }
 
     std::string toString() const {
-        return "Measured[];"
+        return "Measured[]";
     }
 
     Shader *createShader(Renderer *renderer) const;
