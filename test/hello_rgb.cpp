@@ -3,7 +3,7 @@
 
 
 int main(int argc, char **argv) {
-    using namespace powitacq;
+    using namespace powitacq_rgb;
 
     // load a BRDF
     BRDF brdf("cc_ibiza_sunset_rgb.bsdf");
