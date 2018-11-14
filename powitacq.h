@@ -113,13 +113,14 @@ public:
     BRDF(const std::string &path_to_file);
     ~BRDF();
 
-    /// get the wavelengths sample points
+    /// Get the wavelengths sample points
     const Spectrum &wavelengths() const;
 
-    /// evaluate f_r * cos
+    /// Evaluate f_r * cos
     Spectrum eval(const Vector3f &wi, const Vector3f &wo) const;
 
-    /// importance sample f_r * cos using two uniform variates
+    /// Importance sample f_r * cos(theta) using two uniform variates.
+    /// Returns f_r * cos / pdf, as well as the outgoing direction and PDF.
     Spectrum sample(const Vector2f &u,
                     const Vector3f &wi,
                     Vector3f *wo = nullptr,

@@ -110,16 +110,17 @@ public:
     BRDF(const std::string &path_to_file);
     ~BRDF();
 
-    /// evaluate f_r * cos
+    /// Evaluate f_r * cos
     Vector3f eval(const Vector3f &wi, const Vector3f &wo) const;
 
-    /// importance sample f_r * cos using two uniform variates
+    /// Importance sample f_r * cos(theta) using two uniform variates.
+    /// Returns f_r * cos / pdf, as well as the outgoing direction and PDF.
     Vector3f sample(const Vector2f &u,
                     const Vector3f &wi,
                     Vector3f *wo = nullptr,
                     float *pdf = nullptr) const;
 
-    /// evaluate the PDF of a sample
+    /// Evaluate the PDF of a sample
     float pdf(const Vector3f &wi, const Vector3f &wo) const;
 
 private:
