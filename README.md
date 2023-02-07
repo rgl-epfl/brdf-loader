@@ -43,3 +43,12 @@ be removed in a "production" setting.
 The ``python`` directory contains functionality to load and save ``.bsdf``
 files via Python/NumPy. The file ``visualize.py`` loads an RGB material file,
 plots the VNDF and slice data, and then writes it back.
+
+You can also use the C++ BSDF class in Python using the provided `nanobind` module.
+
+### Installation
+```
+pip install .
+```
+
+See the examples in `test` on how to use the C++ and Python classes.
