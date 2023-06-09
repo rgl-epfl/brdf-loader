@@ -21,7 +21,7 @@ public:
         fs::path filename = Thread::getThread()->getFileResolver()->resolve(
             props.getString("filename"));
 
-        m_brdf = new powitacq::BRDF(filename.string().c_str());
+        m_brdf = new powitacq_rgb::BRDF(filename.string().c_str());
     }
 
     Measured(Stream *stream, InstanceManager *manager)
@@ -43,25 +43,25 @@ public:
     }
 
     Spectrum eval(const BSDFSamplingRecord &bRec, EMeasure measure) const {
-        powitacq::Vector3f wi = powitacq::Vector3f(bRec.wi.x, bRec.wi.y, bRec.wi.z);
-        powitacq::Vector3f wo = powitacq::Vector3f(bRec.wo.x, bRec.wo.y, bRec.wo.z);
-        powitacq::Vector3f fr = m_brdf->eval(wi, wo);
+        powitacq_rgb::Vector3f wi = powitacq_rgb::Vector3f(bRec.wi.x, bRec.wi.y, bRec.wi.z);
+        powitacq_rgb::Vector3f wo = powitacq_rgb::Vector3f(bRec.wo.x, bRec.wo.y, bRec.wo.z);
+        powitacq_rgb::Vector3f fr = m_brdf->eval(wi, wo);
 
         return Color3(fr[0], fr[1], fr[2]);
     }
 
     Float pdf(const BSDFSamplingRecord &bRec, EMeasure measure) const {
-        powitacq::Vector3f wi = powitacq::Vector3f(bRec.wi.x, bRec.wi.y, bRec.wi.z);
-        powitacq::Vector3f wo = powitacq::Vector3f(bRec.wo.x, bRec.wo.y, bRec.wo.z);
+        powitacq_rgb::Vector3f wi = powitacq_rgb::Vector3f(bRec.wi.x, bRec.wi.y, bRec.wi.z);
+        powitacq_rgb::Vector3f wo = powitacq_rgb::Vector3f(bRec.wo.x, bRec.wo.y, bRec.wo.z);
 
         return m_brdf->pdf(wi, wo);
     }
 
     Spectrum sample(BSDFSamplingRecord &bRec, Float &pdf, const Point2 &sample) const {
-        powitacq::Vector3f wi = powitacq::Vector3f(bRec.wi.x, bRec.wi.y, bRec.wi.z);
-        powitacq::Vector2f u = powitacq::Vector2f(sample.x, sample.y);
-        powitacq::Vector3f wo;
-        powitacq::Vector3f fr = m_brdf->sample(u, wi, &wo, &pdf);
+        powitacq_rgb::Vector3f wi = powitacq_rgb::Vector3f(bRec.wi.x, bRec.wi.y, bRec.wi.z);
+        powitacq_rgb::Vector2f u = powitacq_rgb::Vector2f(sample.x, sample.y);
+        powitacq_rgb::Vector3f wo;
+        powitacq_rgb::Vector3f fr = m_brdf->sample(u, wi, &wo, &pdf);
 
         // set out dir
         bRec.wo = Vector3f(wo[0], wo[1], wo[2]);
@@ -85,7 +85,7 @@ public:
 
     MTS_DECLARE_CLASS()
 private:
-    powitacq::BRDF *m_brdf;
+    powitacq_rgb::BRDF *m_brdf;
 };
 
 // ================ Hardware shader implementation ================
