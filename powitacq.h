@@ -70,6 +70,12 @@ template <typename Type, size_t Dim> struct Vector {
             values[i] = v;
     }
 
+    /// Initialization with std::array
+    Vector(std::array<Type, Dim>& v) {
+        for (size_t i = 0; i < Dim; ++i)
+            values[i] = v[i];
+    }
+
     /// Initialization with individual components
     template <typename Arg, typename... Args, std::enable_if_t<(sizeof...(Args) >= 1), int> = 0>
     Vector(Arg arg, Args... args) : values { (Type) arg, (Type) args... } { }
